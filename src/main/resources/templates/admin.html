@@ -5,6 +5,44 @@
     <title>Admin page</title>
 </head>
 <body>
-it's admin page
+
+<table border="1">
+    <tr>
+        <th>Номер</th>
+        <th>Имя</th>
+        <th>Пароль</th>
+        <th>Возраст</th>
+        <th>Роли</th>
+        <th>Редактирование</th>
+    </tr>
+    <tr th:each="user, state : ${usersList}"
+        class="row"
+        th:classappend="${state.odd} ? 'odd-row' : 'even-row'">
+        <td th:utext="${user.id}">Номер</td>
+        <td th:utext="${user.username}">Имя</td>
+        <td th:utext="${user.password}">Пароль</td>
+        <td th:utext="${user.age}">Возраст</td>
+        <td th:utext="${user.roles}">Роли</td>
+        <td>
+            <form th:method="get" th:action="@{/admin/edit/{id}(id=${user.id})}">
+                <input type="submit" value="Изменить">
+            </form>
+            <form th:method="delete" th:action="@{/admin/delete/{id}(id=${user.id})}">
+                <input type="submit" value="Удалить">
+            </form>
+        </td>
+    </tr>
+</table>
+<br>
+
+<form th:method="get" th:action="@{/admin/add}">
+    <input type="submit" value="Добавить">
+</form>
+<br>
+
+<form th:method="post" th:action="@{/logout}">
+    <input type="submit" value="Выйти">
+</form>
+
 </body>
 </html>

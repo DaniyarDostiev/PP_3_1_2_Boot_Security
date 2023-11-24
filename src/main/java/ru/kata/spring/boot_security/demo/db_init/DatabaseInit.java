@@ -30,7 +30,7 @@ public class DatabaseInit {
         Role adminRole = createRoleIfNotFound("ROLE_ADMIN");
 
         createUserIfNotFound("user", passwordEncoder.encode("user"), 20, Set.of(userRole));
-        createUserIfNotFound("admin", passwordEncoder.encode("admin"), 20, Set.of(adminRole));
+        createUserIfNotFound("admin", passwordEncoder.encode("admin"), 20, Set.of(adminRole, userRole));
     }
 
     private Role createRoleIfNotFound(String name) {
@@ -42,12 +42,11 @@ public class DatabaseInit {
         return role;
     }
 
-    private User createUserIfNotFound(String username, String password, int age, Set<Role> roles) {
+    private void createUserIfNotFound(String username, String password, int age, Set<Role> roles) {
         User user = userRepository.findByUsername(username);
         if (user == null) {
             user = new User(username, password, age, roles);
             userRepository.save(user);
         }
-        return user;
     }
 }
