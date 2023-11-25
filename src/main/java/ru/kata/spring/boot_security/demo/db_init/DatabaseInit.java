@@ -18,7 +18,9 @@ public class DatabaseInit {
     private final PasswordEncoder passwordEncoder;
 
     @Autowired
-    public DatabaseInit(UserRepository userRepository, RoleRepository roleRepository, PasswordEncoder passwordEncoder) {
+    public DatabaseInit(UserRepository userRepository,
+                        RoleRepository roleRepository,
+                        PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
         this.roleRepository = roleRepository;
         this.passwordEncoder = passwordEncoder;
@@ -29,8 +31,10 @@ public class DatabaseInit {
         Role userRole = createRoleIfNotFound("ROLE_USER");
         Role adminRole = createRoleIfNotFound("ROLE_ADMIN");
 
-        createUserIfNotFound("user", passwordEncoder.encode("user"), 20, Set.of(userRole));
-        createUserIfNotFound("admin", passwordEncoder.encode("admin"), 20, Set.of(adminRole, userRole));
+        createUserIfNotFound("user", passwordEncoder.encode("user"),
+                20, Set.of(userRole));
+        createUserIfNotFound("admin", passwordEncoder.encode("admin"),
+                20, Set.of(adminRole, userRole));
     }
 
     private Role createRoleIfNotFound(String name) {
