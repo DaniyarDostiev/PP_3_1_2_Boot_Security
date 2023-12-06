@@ -15,6 +15,7 @@ import ru.kata.spring.boot_security.demo.models.User;
 import ru.kata.spring.boot_security.demo.services.RoleService;
 import ru.kata.spring.boot_security.demo.services.UserService;
 
+import java.security.Principal;
 import java.util.Optional;
 
 @Controller
@@ -32,38 +33,31 @@ public class AdminsController {
     }
 
     @GetMapping()
-    public String adminPage(Model model) {
+    public String adminPage(Model model, Principal principal) {
         model.addAttribute("usersList", userService.findAll());
+        model.addAttribute("currentUser", userService.findByUsername(principal.getName()));
+        model.addAttribute("userModal", new User());
+        model.addAttribute("allRoles", roleService.findAll());
         return "admin";
     }
 
-    @GetMapping("/edit/{id}")
-    public String editPage(@PathVariable("id") int id, Model model) {
-        Optional<User> userOptional = userService.findById(id);
-        if (userOptional.isPresent()) {
-            model.addAttribute("user", userOptional.get());
-            model.addAttribute("allRoles", roleService.findAll());
-            return "add_edit_user";
-        }
-        return "redirect:/admin";
-    }
-
     @PatchMapping("/edit/{id}")
-    public String saveEdit(@ModelAttribute("user") User user) {
+    public String saveEdit(@ModelAttribute("userModal") User user) {
+        if (user.getPassword() == null) {
+            user.setPassword(userService.findByUsername(user.getUsername()).getPassword());
+        } else {
+            user.setPassword(passwordEncoder.encode(user.getPassword()));
+        }
         userService.saveUser(user);
         return "redirect:/admin";
-    }
-
-    @GetMapping("/add")
-    public String addPage(@ModelAttribute("user") User user, Model model) {
-        model.addAttribute("allRoles", roleService.findAll());
-        return "add_edit_user";
     }
 
     @PostMapping("/add")
-    public String saveAdd(@ModelAttribute("user") User user) {
-        user.setPassword(passwordEncoder.encode(user.getPassword()));
-        userService.saveUser(user);
+    public String saveAdd(@ModelAttribute("userModal") User user) {
+        if (userService.findByUsername(user.getUsername()) == null) {
+            user.setPassword(passwordEncoder.encode(user.getPassword()));
+            userService.saveUser(user);
+        }
         return "redirect:/admin";
     }
 
