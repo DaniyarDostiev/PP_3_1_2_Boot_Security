@@ -67,7 +67,7 @@ public class AdminsRestController {
 
     @PatchMapping("/users")
     public ResponseEntity<HttpStatus> editUser(@RequestBody User user) {
-        if (user.getPassword() == null) {
+        if (user.getPassword() == null || user.getPassword().isEmpty()) {
             user.setPassword(userService.findByUsername(user.getUsername()).getPassword());
         } else {
             user.setPassword(passwordEncoder.encode(user.getPassword()));

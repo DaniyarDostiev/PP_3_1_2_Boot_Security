@@ -51,5 +51,6 @@ formEdit.addEventListener("submit", e => {
         })
         .then(() => userTableFilling())
         .then(() => modalEdit.hide())
+        .then(() => passwordFormEdit.value = "")
         .catch(error => console.error("Error during fetch:", error))
 })
