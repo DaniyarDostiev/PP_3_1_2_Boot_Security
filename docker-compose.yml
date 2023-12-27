@@ -1,0 +1,26 @@
+version: '3'
+
+services:
+  mysql-db:
+    image: mysql:latest
+    ports:
+      - "3307:3306"
+    environment:
+      - MYSQL_ROOT_PASSWORD=root
+      - MYSQL_USER=app_user
+      - MYSQL_PASSWORD=app_user
+      - MYSQL_DATABASE=spring_hibernate_mvc
+    volumes:
+      - mysql_data:/var/lib/mysql
+
+  spring-app:
+    image: dostievdaniyar/pp_kata_app
+    ports:
+      - "8080:8080"
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql-db:3306/spring_hibernate_mvc
+    depends_on:
+      - mysql-db
+
+volumes:
+  mysql_data:
